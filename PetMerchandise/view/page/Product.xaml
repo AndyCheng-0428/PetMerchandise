@@ -1,0 +1,146 @@
+<Page x:Class="PetMerchandise.view.Product"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:PetMerchandise.view"
+      mc:Ignorable="d"
+      Title="Product" Height="450" Width="800">
+    <ScrollViewer>
+        <StackPanel>
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource N_TextBlock}" />
+                    <Style TargetType="Border" BasedOn="{StaticResource N_TextBlockBorder}" />
+                    <Style TargetType="TextBox" BasedOn="{StaticResource N_TextBox_S}" />
+                    <Style TargetType="ComboBox" BasedOn="{StaticResource N_ComboBox_Base}" />
+                </Grid.Resources>
+
+                <!--產品名稱-->
+                <Border Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="產品名稱" />
+                </Border>
+                <TextBox Grid.Row="0" Grid.Column="1" MaxLength="32" />
+
+                <!--產品副名稱-->
+                <Border Grid.Row="0" Grid.Column="2">
+                    <TextBlock Text="產品副名稱" />
+                </Border>
+                <TextBox Grid.Row="0" Grid.Column="3" MaxLength="32" />
+
+                <!--製造商-->
+                <Border Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="製造商" />
+                </Border>
+                <TextBox Grid.Row="1" Grid.Column="1" MaxLength="64" />
+
+                <!--品牌-->
+                <Border Grid.Row="1" Grid.Column="2">
+                    <TextBlock Text="品牌" />
+                </Border>
+                <TextBox Grid.Row="1" Grid.Column="3" MaxLength="32" />
+
+                <!--包裝-->
+                <Border Grid.Row="2" Grid.Column="0">
+                    <TextBlock Text="包裝" />
+                </Border>
+                <TextBox Grid.Row="2" Grid.Column="1" />
+
+                <!--賣價-->
+                <Border Grid.Row="2" Grid.Column="2">
+                    <TextBlock Text="賣價" />
+                </Border>
+                <TextBox Grid.Row="2" Grid.Column="3" MaxLength="17" />
+
+                <!--適用動物-->
+                <Border Grid.Row="3" Grid.Column="0">
+                    <TextBlock Text="適用於" />
+                </Border>
+                <ComboBox Grid.Row="3" Grid.Column="1">
+                    <ComboBoxItem>全部</ComboBoxItem>
+                    <ComboBoxItem>狗</ComboBoxItem>
+                    <ComboBoxItem>貓</ComboBoxItem>
+                </ComboBox>
+
+                <!--年齡層-->
+                <Border Grid.Row="3" Grid.Column="2">
+                    <TextBlock Text="年齡層" />
+                </Border>
+                <ComboBox Grid.Row="3" Grid.Column="3">
+                    <ComboBoxItem>全齡</ComboBoxItem>
+                    <ComboBoxItem>幼齡</ComboBoxItem>
+                    <ComboBoxItem>成齡</ComboBoxItem>
+                    <ComboBoxItem>老齡</ComboBoxItem>
+                </ComboBox>
+
+                <!--類別一-->
+                <Border Grid.Row="4" Grid.Column="0">
+                    <TextBlock Text="類別一" />
+                </Border>
+                <TextBox Grid.Row="4" Grid.Column="1" MaxLength="10" />
+
+                <!--類別二-->
+                <Border Grid.Row="4" Grid.Column="2">
+                    <TextBlock Text="類別二" />
+                </Border>
+                <TextBox Grid.Row="4" Grid.Column="3" MaxLength="10" />
+
+                <!--EAN13-->
+                <Border Grid.Row="5" Grid.Column="0">
+                    <TextBlock Text="EAN13" />
+                </Border>
+                <TextBox Grid.Row="5" Grid.Column="1" MaxLength="13" />
+
+                <!--販售名稱-->
+                <Border Grid.Row="5" Grid.Column="2">
+                    <TextBlock Text="販售名稱" />
+                </Border>
+                <TextBox Grid.Row="5" Grid.Column="3" MaxLength="32" />
+
+                <!--成本-->
+                <Border Grid.Row="6" Grid.Column="0">
+                    <TextBlock Text="成本" />
+                </Border>
+                <TextBox Grid.Row="6" Grid.Column="1" MaxLength="17" />
+
+                <!--最低成本-->
+                <Border Grid.Row="6" Grid.Column="2">
+                    <TextBlock Text="最低成本" />
+                </Border>
+                <TextBox Grid.Row="6" Grid.Column="3" MaxLength="17" />
+            </Grid>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource N_Button_A}">新增</Button>
+                <Button Grid.Row="0" Grid.Column="5" Style="{StaticResource N_Button_D}">取消</Button>
+
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -1,0 +1,263 @@
+<Page x:Class="PetMerchandise.view.page.puchase.Purchase"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:content="clr-namespace:PetMerchandise.core.view_model.purchase_order"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:interactivity="http://prismlibrary.com/"
+      mc:Ignorable="d"
+      Title="Purchase">
+    <ScrollViewer>
+        <ScrollViewer.DataContext>
+            <content:PurchaseOrderViewModel />
+        </ScrollViewer.DataContext>
+        <StackPanel>
+            <Grid>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource N_TextBlock}" />
+                    <Style TargetType="Border" BasedOn="{StaticResource N_TextBlockBorder}" />
+                    <Style TargetType="Button" BasedOn="{StaticResource N_Button_A}" />
+
+                </Grid.Resources>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <!--訂單建立日期-->
+                <Border Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="商品入庫日期" />
+                </Border>
+                <DatePicker VerticalAlignment="Center" VerticalContentAlignment="Center" Grid.Row="0" Grid.Column="1"
+                            Grid.ColumnSpan="2" SelectedDate="{Binding purchaseDate}" IsTodayHighlighted="True">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="SelectedDateChanged">
+                            <i:InvokeCommandAction Command="{Binding ChangeDateCommand}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </DatePicker>
+
+                <Button Grid.Row="1" Grid.Column="3" Command="{Binding AddDetailCommand}">新增</Button>
+
+            </Grid>
+
+            <DataGrid CanUserAddRows="False" ItemsSource="{Binding OrderDetailBeanList}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="國際條碼" MinWidth="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding  ean13 , UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         IsEnabled="{Binding Enable}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="LostFocus">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QueryProductCommand}"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </TextBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="有效期限" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding expDate, StringFormat='yyyy/MM/dd'}"
+                                           IsEnabled="{Binding Enable}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding Path=expDate}" IsEnabled="{Binding Enable}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="數量" Width="Auto" MinWidth="30">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{ Binding  qty, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                         IsEnabled="{Binding Enable}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Header="商品狀態"
+                                        Binding="{Binding StatusText, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Width="Auto" MinWidth="80" IsReadOnly="True" />
+                    <DataGridTemplateColumn Header="類別一" Width="Auto" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox IsReadOnly="{Binding Enable}">
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.groupType1Source}" />
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=groupType1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding groupType1}" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QueryBrandNameCommand}"
+                                                CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="品牌" Width="Auto" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox IsReadOnly="{Binding Enable}">
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource"
+                                                    Value="{Binding brandNameSource}" />
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=brand, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding brand}" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QueryProductNameCommand}"
+                                                CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="商品名稱" Width="Auto" MinWidth="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox IsReadOnly="{Binding Enable}">
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource"
+                                                    Value="{Binding productNameSource}" />
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=productName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding productName}" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QuerySubNameCommand}"
+                                                CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="商品副名稱" Width="Auto" MinWidth="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox IsReadOnly="{Binding Enable}">
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource"
+                                                    Value="{Binding productSubNameSource, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=productSubName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding productSubName}" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <interactivity:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QueryPackageCommand}"
+                                                CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="包裝" Width="Auto" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox IsReadOnly="{Binding Enable}">
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource"
+                                                    Value="{Binding packageSource, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=package, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding package}" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="SelectionChanged">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QueryUuidCommand}"
+                                                CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+
+                    <DataGridTemplateColumn Header="商品唯一辨識碼" MinWidth="260" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox
+                                    IsReadOnly="{Binding Enable}"
+                                    ItemsSource="{Binding uuidSource}"
+                                    SelectedValue="{Binding Uuid, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                    SelectedItem="{Binding Uuid}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="30">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button IsEnabled="{Binding Enable }"
+                                        Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.DeleteDetailCommand}"
+                                        CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }">
+                                    刪除
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1" Style="{StaticResource N_Button}" Command="{Binding TransInCommand}">入庫</Button>
+                <Button Grid.Column="2" Style="{StaticResource N_Button_A}" Command="{Binding LoginCommand}">登記</Button>
+                <Button Grid.Column="3" Style="{StaticResource N_Button_D}" Command="{Binding ClearAllCommand}">取消</Button>
+            </Grid>
+        </StackPanel>
+        <i:Interaction.Triggers>
+            <interactivity:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
+                <interactivity:PopupWindowAction />
+            </interactivity:InteractionRequestTrigger>
+        </i:Interaction.Triggers>
+    </ScrollViewer>
+</Page>

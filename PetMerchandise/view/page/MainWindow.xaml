@@ -1,0 +1,39 @@
+﻿<Window x:Class="PetMerchandise.view.page.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+
+        Title="寵物商品出入貨系統" Height="768" Width="1024">
+    <Grid>
+
+        <TabControl TabStripPlacement="Left" VerticalAlignment="Top">
+            <TabItem>
+                <TabItem.Header>
+                    建立訂單
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Frame Source="OrderCreation.xaml" />
+                </TabItem.Content>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    訂單管理
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Frame Source="OrderManager.xaml" />
+                </TabItem.Content>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    進貨
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Frame Source="purchase/Purchase.xaml" />
+                </TabItem.Content>
+            </TabItem>
+        </TabControl>
+        
+    </Grid>
+</Window>

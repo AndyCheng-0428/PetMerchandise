@@ -1,0 +1,340 @@
+<Page x:Class="PetMerchandise.view.page.Order"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:saleOrder="clr-namespace:PetMerchandise.core.view_model.sale_order"
+      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+      xmlns:prism="http://prismlibrary.com/"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      mc:Ignorable="d">
+    <ScrollViewer>
+        <StackPanel>
+            <StackPanel.DataContext>
+                <saleOrder:OrderCreationViewModel />
+            </StackPanel.DataContext>
+            <Grid Margin="10">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.Resources>
+                    <Style TargetType="TextBlock" BasedOn="{StaticResource N_TextBlock}" />
+                    <Style TargetType="Border" BasedOn="{StaticResource N_TextBlockBorder}" />
+                    <Style TargetType="TextBox" BasedOn="{StaticResource N_TextBox_S}" />
+                    <Style TargetType="ComboBox" BasedOn="{StaticResource N_ComboBox_Base}" />
+                    <Style TargetType="DatePicker" BasedOn="{StaticResource N_DatePicker_Base}" />
+                </Grid.Resources>
+
+                <!--訂單建立日期-->
+                <Border Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="訂單建立日期" />
+                </Border>
+                <DatePicker Grid.Row="0" Grid.Column="1" SelectedDate="{Binding OrderViewBean.orderEstablishDate}" />
+
+                <!--購買者-->
+                <Border Grid.Row="0" Grid.Column="2">
+                    <TextBlock Text="購買者" />
+                </Border>
+                <TextBox Grid.Row="0" Grid.Column="3" MaxLength="10" Text="{Binding OrderViewBean.purchaser}" />
+
+                <!--訂單渠道-->
+                <Border Grid.Row="1" Grid.Column="0">
+                    <TextBlock Text="訂單渠道" />
+                </Border>
+                <ComboBox Grid.Row="1" Grid.Column="1" SelectedValuePath="Tag"
+                          SelectedValue="{Binding OrderViewBean.channel}"
+                          SelectedItem="{Binding OrderViewBean.channel}">
+                    <ComboBoxItem Tag="0">自取</ComboBoxItem>
+                    <ComboBoxItem Tag="1">賣貨便</ComboBoxItem>
+                    <ComboBoxItem Tag="2">萊賣貨</ComboBoxItem>
+                    <ComboBoxItem Tag="9">自用</ComboBoxItem>
+                </ComboBox>
+
+
+                <!--渠道訂單編號-->
+                <Border Grid.Row="1" Grid.Column="2">
+                    <TextBlock Text="渠道訂單編號" />
+                </Border>
+                <Grid Grid.Row="1" Grid.Column="3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.Row="0" Grid.Column="0" MaxLength="32" Text="{Binding OrderViewBean.orderNo}"/>
+                    <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource N_Button}" Command="{Binding QueryChannelOrderCommand}">查詢</Button>
+                </Grid>
+
+
+                <!--購買者手機-->
+                <Border Grid.Row="2" Grid.Column="0">
+                    <TextBlock Text="購買者手機" />
+                </Border>
+                <TextBox Grid.Row="2" Grid.Column="1" MaxLength="10" Text="{Binding OrderViewBean.purchaserPhone}" />
+
+                <!--FaceBook ID-->
+                <Border Grid.Row="2" Grid.Column="2">
+                    <TextBlock Text="FaceBook ID" />
+                </Border>
+                <TextBox Grid.Row="2" Grid.Column="3" MaxLength="32" Text="{Binding OrderViewBean.purchaserFbId}" />
+                <!--運費-->
+                <Border Grid.Row="3" Grid.Column="0">
+                    <TextBlock Text="運費" />
+                </Border>
+                <TextBox Grid.Row="3" Grid.Column="1" MaxLength="3" Text="{Binding OrderViewBean.deliveryFee}" />
+                <!--運費類型-->
+                <Border Grid.Row="3" Grid.Column="2">
+                    <TextBlock Text="運費類型" />
+                </Border>
+                <ComboBox Grid.Row="3" Grid.Column="3" SelectedValuePath="Tag"
+                          SelectedValue="{Binding OrderViewBean.deliveryFeeType}"
+                          SelectedItem="{Binding OrderViewBean.deliveryFeeType}">
+                    <ComboBoxItem Tag="0">含運</ComboBoxItem>
+                    <ComboBoxItem Tag="1">不含運</ComboBoxItem>
+                </ComboBox>
+            </Grid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Row="0" Grid.Column="5" Style="{StaticResource N_Button_A}"
+                        Command="{Binding Path= AddDetailCommand}">
+                    新增
+                </Button>
+            </Grid>
+            <DataGrid CanUserAddRows="False" ItemsSource="{Binding OrderDetailBeanList}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="國際條碼" MinWidth="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Text="{Binding  ean13 , UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="LostFocus">
+                                            <b:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QueryProductCommand}"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </TextBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="有效期限" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding expDate, StringFormat='yyyy/MM/dd'}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        <DataGridTemplateColumn.CellEditingTemplate>
+                            <DataTemplate>
+                                <DatePicker SelectedDate="{Binding Path=expDate}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Header="數量"
+                                        Binding="{Binding qty, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                        Width="Auto" MinWidth="30" />
+
+                    <DataGridTextColumn Header="單價" Binding="{Binding unitPrice}" Width="Auto" MinWidth="40" />
+
+                    <DataGridTemplateColumn Header="類別一" Width="Auto" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox>
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource"
+                                                    Value="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.groupType1Source}" />
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=groupType1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding groupType1}" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="SelectionChanged">
+                                            <b:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QueryBrandNameCommand}"
+                                                CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="品牌" Width="Auto" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox>
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource"
+                                                    Value="{Binding brandNameSource}" />
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=brand, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding brand}" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="SelectionChanged">
+                                            <b:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QueryProductNameCommand}"
+                                                CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="商品名稱" Width="Auto" MinWidth="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox>
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource"
+                                                    Value="{Binding productNameSource}" />
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=productName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding productName}" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="SelectionChanged">
+                                            <b:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QuerySubNameCommand}"
+                                                CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="商品副名稱" Width="Auto" MinWidth="140">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox>
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource"
+                                                    Value="{Binding productSubNameSource, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=productSubName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding productSubName}" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="SelectionChanged">
+                                            <b:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QueryPackageCommand}"
+                                                CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="包裝" Width="Auto" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox>
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="ItemsSource"
+                                                    Value="{Binding packageSource, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=package, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding package}" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <b:Interaction.Triggers>
+                                        <b:EventTrigger EventName="SelectionChanged">
+                                            <b:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.QueryUuidCommand}"
+                                                CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }" />
+                                        </b:EventTrigger>
+                                    </b:Interaction.Triggers>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+
+                    <DataGridTemplateColumn Header="商品唯一辨識碼" MinWidth="260" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox
+                                    ItemsSource="{Binding uuidSource}"
+                                    SelectedValue="{Binding Uuid, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                                    SelectedItem="{Binding Uuid}" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Width="30">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button
+                                    Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.DeleteDetailCommand}"
+                                    CommandParameter="{Binding  RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem  }">
+                                    刪除
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Row="0" Grid.Column="4" Style="{StaticResource N_Button_A}"
+                        Command="{Binding SaveOrderCommand }">
+                    儲存
+                </Button>
+                <Button Grid.Row="0" Grid.Column="5" Style="{StaticResource N_Button_D}"
+                        Command="{Binding ClearAllCommand}">
+                    取消
+                </Button>
+            </Grid>
+            <i:Interaction.Triggers>
+                <prism:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
+                    <prism:PopupWindowAction />
+                </prism:InteractionRequestTrigger>
+            </i:Interaction.Triggers>
+        </StackPanel>
+
+    </ScrollViewer>
+</Page>

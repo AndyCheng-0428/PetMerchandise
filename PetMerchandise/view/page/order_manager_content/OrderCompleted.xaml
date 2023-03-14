@@ -1,0 +1,74 @@
+<Page x:Class="PetMerchandise.view.page.order_manager_content.OrderCompleted"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:manager="clr-namespace:PetMerchandise.core.view_model.sale_order"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:interactionRequest="http://prismlibrary.com/"
+      mc:Ignorable="d">
+    <ScrollViewer>
+        <ScrollViewer.DataContext>
+            <manager:OrderManagerViewModel />
+
+        </ScrollViewer.DataContext>
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="Loaded">
+                <i:InvokeCommandAction Command="{Binding InitCompletedOrderCommand }" />
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
+        <StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <!-- <Button Command="{Binding TransOutOrderCommand}">訂單出貨</Button> -->
+                <!-- <Button Command="{Binding CompleteOrderCommand}">買家已取貨</Button> -->
+                <!-- <Button Command="{Binding DiscardOrderCommand}">棄單</Button> -->
+            </StackPanel>
+            <DataGrid CanUserDeleteRows="False" CanUserAddRows="False" ItemsSource="{Binding OrderStatusBeanList}"
+                      AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox>
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Checked">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.AddItemToProcessListCommand }"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="Unchecked">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.RemoveItemFromProcessListCommand }"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </CheckBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="訂單建立日期" Binding="{Binding OrderDate}" />
+                    <DataGridTextColumn Header="訂單渠道" Binding="{Binding OrderChannel}" />
+                    <DataGridTextColumn Header="訂單編號" Binding="{Binding OrderChannelNo}" />
+                    <DataGridTextColumn Header="狀態" Binding="{Binding OrderStatus}" />
+                    <DataGridTextColumn Header="總金額(不含運費)" Binding="{Binding OrderSaleSum}" />
+                    <DataGridTextColumn Header="運費" Binding="{Binding OrderDeliveryFee}" />
+                    <DataGridTextColumn Header="運費型態" Binding="{Binding OrderDeliveryFeeTypeName}" />
+                    <DataGridTextColumn Header="訂購人" Binding="{Binding PurchaserName}" />
+                    <DataGridTextColumn Header="訂購人電話" Binding="{Binding PurchaserPhoneNo}" />
+                    <DataGridTextColumn Header="訂購人FB ID" Binding="{Binding PurchaserFacebookId}" />
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Command="{Binding TurnPageUpCommand}">上一頁</Button>
+                <TextBlock Text="{Binding  _currentPage}" />
+                <Button Command="{Binding TurnPageDownCommand}">下一頁</Button>
+            </StackPanel>
+            <i:Interaction.Triggers>
+                <interactionRequest:InteractionRequestTrigger SourceObject="{Binding ConfirmationRequest, Mode=OneWay}">
+                    <interactionRequest:PopupWindowAction />
+                </interactionRequest:InteractionRequestTrigger>
+            </i:Interaction.Triggers>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
