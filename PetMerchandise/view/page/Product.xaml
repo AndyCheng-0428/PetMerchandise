@@ -3,13 +3,19 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:local="clr-namespace:PetMerchandise.view"
+      xmlns:viewModel="clr-namespace:PetMerchandise.core.view_model.product"
+      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
       mc:Ignorable="d"
-      Title="Product" Height="450" Width="800">
+      Title="Product">
     <ScrollViewer>
         <StackPanel>
+            <StackPanel.DataContext>
+                <viewModel:ProductViewModel />
+            </StackPanel.DataContext>
             <Grid Margin="10">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
@@ -34,94 +40,128 @@
                 <Border Grid.Row="0" Grid.Column="0">
                     <TextBlock Text="產品名稱" />
                 </Border>
-                <TextBox Grid.Row="0" Grid.Column="1" MaxLength="32" />
+                <TextBox Grid.Row="0" Grid.Column="1" MaxLength="32" Text="{Binding Product.Name }" />
 
                 <!--產品副名稱-->
                 <Border Grid.Row="0" Grid.Column="2">
                     <TextBlock Text="產品副名稱" />
                 </Border>
-                <TextBox Grid.Row="0" Grid.Column="3" MaxLength="32" />
+                <TextBox Grid.Row="0" Grid.Column="3" MaxLength="32" Text="{Binding Product.SubName}" />
 
                 <!--製造商-->
                 <Border Grid.Row="1" Grid.Column="0">
                     <TextBlock Text="製造商" />
                 </Border>
-                <TextBox Grid.Row="1" Grid.Column="1" MaxLength="64" />
+                <TextBox Grid.Row="1" Grid.Column="1" MaxLength="64" Text="{Binding Product.Manufacture}" />
 
                 <!--品牌-->
                 <Border Grid.Row="1" Grid.Column="2">
                     <TextBlock Text="品牌" />
                 </Border>
-                <TextBox Grid.Row="1" Grid.Column="3" MaxLength="32" />
+                <TextBox Grid.Row="1" Grid.Column="3" MaxLength="32" Text="{Binding Product.Brand}" />
 
                 <!--包裝-->
                 <Border Grid.Row="2" Grid.Column="0">
                     <TextBlock Text="包裝" />
                 </Border>
-                <TextBox Grid.Row="2" Grid.Column="1" />
+                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding Product.Package}" />
 
                 <!--賣價-->
                 <Border Grid.Row="2" Grid.Column="2">
                     <TextBlock Text="賣價" />
                 </Border>
-                <TextBox Grid.Row="2" Grid.Column="3" MaxLength="17" />
+                <TextBox Grid.Row="2" Grid.Column="3" MaxLength="17" Text="{Binding Product.SalePrice}" />
 
                 <!--適用動物-->
                 <Border Grid.Row="3" Grid.Column="0">
                     <TextBlock Text="適用於" />
                 </Border>
-                <ComboBox Grid.Row="3" Grid.Column="1">
-                    <ComboBoxItem>全部</ComboBoxItem>
-                    <ComboBoxItem>狗</ComboBoxItem>
-                    <ComboBoxItem>貓</ComboBoxItem>
+                <ComboBox Grid.Row="3" Grid.Column="1" SelectedValue="{Binding Product.Animal}"
+                          SelectedItem="{Binding Product.Animal}" SelectedValuePath="Tag">
+                    <ComboBoxItem Tag="0">全部</ComboBoxItem>
+                    <ComboBoxItem Tag="1">狗</ComboBoxItem>
+                    <ComboBoxItem Tag="2">貓</ComboBoxItem>
                 </ComboBox>
 
                 <!--年齡層-->
                 <Border Grid.Row="3" Grid.Column="2">
                     <TextBlock Text="年齡層" />
                 </Border>
-                <ComboBox Grid.Row="3" Grid.Column="3">
-                    <ComboBoxItem>全齡</ComboBoxItem>
-                    <ComboBoxItem>幼齡</ComboBoxItem>
-                    <ComboBoxItem>成齡</ComboBoxItem>
-                    <ComboBoxItem>老齡</ComboBoxItem>
+                <ComboBox Grid.Row="3" Grid.Column="3" SelectedValue="{Binding Product.AgeGroup}"
+                          SelectedItem="{Binding Product.AgeGroup}" SelectedValuePath="Tag">
+                    <ComboBoxItem Tag="0">全齡</ComboBoxItem>
+                    <ComboBoxItem Tag="1">幼齡</ComboBoxItem>
+                    <ComboBoxItem Tag="2">成齡</ComboBoxItem>
+                    <ComboBoxItem Tag="3">老齡</ComboBoxItem>
                 </ComboBox>
 
                 <!--類別一-->
                 <Border Grid.Row="4" Grid.Column="0">
                     <TextBlock Text="類別一" />
                 </Border>
-                <TextBox Grid.Row="4" Grid.Column="1" MaxLength="10" />
+                <TextBox Grid.Row="4" Grid.Column="1" MaxLength="10" Text="{Binding Product.TypeGroup1}" />
 
                 <!--類別二-->
                 <Border Grid.Row="4" Grid.Column="2">
                     <TextBlock Text="類別二" />
                 </Border>
-                <TextBox Grid.Row="4" Grid.Column="3" MaxLength="10" />
+                <TextBox Grid.Row="4" Grid.Column="3" MaxLength="10" Text="{Binding Product.TypeGroup2}" />
 
                 <!--EAN13-->
                 <Border Grid.Row="5" Grid.Column="0">
                     <TextBlock Text="EAN13" />
                 </Border>
-                <TextBox Grid.Row="5" Grid.Column="1" MaxLength="13" />
+                <TextBox Grid.Row="5" Grid.Column="1" MaxLength="13" Text="{Binding Product.Ean13}" />
 
                 <!--販售名稱-->
                 <Border Grid.Row="5" Grid.Column="2">
                     <TextBlock Text="販售名稱" />
                 </Border>
-                <TextBox Grid.Row="5" Grid.Column="3" MaxLength="32" />
+                <TextBox Grid.Row="5" Grid.Column="3" MaxLength="32" Text="{Binding Product.SaleName}" />
 
                 <!--成本-->
                 <Border Grid.Row="6" Grid.Column="0">
                     <TextBlock Text="成本" />
                 </Border>
-                <TextBox Grid.Row="6" Grid.Column="1" MaxLength="17" />
+                <TextBox Grid.Row="6" Grid.Column="1" MaxLength="17" Text="{Binding Product.Cost}" />
 
                 <!--最低成本-->
                 <Border Grid.Row="6" Grid.Column="2">
                     <TextBlock Text="最低成本" />
                 </Border>
-                <TextBox Grid.Row="6" Grid.Column="3" MaxLength="17" />
+                <TextBox Grid.Row="6" Grid.Column="3" MaxLength="17" Text="{Binding Product.CostLowest}" />
+                <!--大元氣販售-->
+                <CheckBox Grid.Row="7" Grid.Column="0">
+                    大元氣販售
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Checked">
+                            <i:InvokeCommandAction
+                                Command="{Binding ChannelGenkiCheckCommand }"
+                                CommandParameter="{Binding Product}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="Unchecked">
+                            <i:InvokeCommandAction
+                                Command="{Binding ChannelGenkiUnCheckCommand }"
+                                CommandParameter="{Binding Product}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </CheckBox>
+                <!--汪汪&喵喵販售-->
+                <CheckBox Grid.Row="7" Grid.Column="1">
+                    汪汪喵喵販售
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Checked">
+                            <i:InvokeCommandAction
+                                Command="{Binding ChannelWanMeowCheckCommand }"
+                                CommandParameter="{Binding Product}" />
+                        </i:EventTrigger>
+                        <i:EventTrigger EventName="Unchecked">
+                            <i:InvokeCommandAction
+                                Command="{Binding ChannelWanMeowUnCheckCommand }"
+                                CommandParameter="{Binding Product}" />
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </CheckBox>
             </Grid>
 
             <Grid>
@@ -141,6 +181,124 @@
                 <Button Grid.Row="0" Grid.Column="5" Style="{StaticResource N_Button_D}">取消</Button>
 
             </Grid>
+            <DataGrid CanUserAddRows="False" ItemsSource="{Binding ProductList}" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="唯一辨識碼" Width="Auto" MinWidth="140" Binding="{Binding Uuid}"
+                                        IsReadOnly="True" />
+                    <DataGridTextColumn Header="國際條碼" Width="Auto" MinWidth="140" Binding="{Binding Ean13}"
+                                        IsReadOnly="True" />
+                    <DataGridTextColumn Header="產品名稱" Width="Auto" MinWidth="140" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="商品副名稱" Width="Auto" MinWidth="140" Binding="{Binding SubName}" />
+                    <DataGridTextColumn Header="製造商" Width="Auto" MinWidth="140" Binding="{Binding Manufacture}" />
+                    <DataGridTextColumn Header="品牌" Width="Auto" MinWidth="140" Binding="{Binding Brand}" />
+                    <DataGridTextColumn Header="包裝" Width="Auto" MinWidth="80" Binding="{Binding Package}" />
+                    <DataGridTextColumn Header="單價" Width="Auto" MinWidth="40" Binding="{Binding SalePrice}" />
+                    <DataGridTemplateColumn Header="動物" Width="Auto" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox>
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=Animal, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding Animal}" />
+                                            <Setter Property="SelectedValuePath" Value="Tag" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <ComboBoxItem Tag="0">全部</ComboBoxItem>
+                                    <ComboBoxItem Tag="1">狗</ComboBoxItem>
+                                    <ComboBoxItem Tag="2">貓</ComboBoxItem>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="年齡層" Width="Auto" MinWidth="80">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <ComboBox>
+                                    <ComboBox.Style>
+                                        <Style TargetType="ComboBox">
+                                            <Setter Property="SelectedValue"
+                                                    Value="{Binding Path=AgeGroup, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                                            <Setter Property="SelectedItem" Value="{Binding AgeGroup}" />
+                                            <Setter Property="SelectedValuePath" Value="Tag" />
+                                        </Style>
+                                    </ComboBox.Style>
+                                    <ComboBoxItem Tag="0">全齡</ComboBoxItem>
+                                    <ComboBoxItem Tag="1">幼齡</ComboBoxItem>
+                                    <ComboBoxItem Tag="2">成齡</ComboBoxItem>
+                                    <ComboBoxItem Tag="3">老齡</ComboBoxItem>
+                                </ComboBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                    <DataGridTextColumn Header="類別一" Width="Auto" MinWidth="80"
+                                        Binding="{Binding Path=TypeGroup1, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="類別二" Width="Auto" MinWidth="80"
+                                        Binding="{Binding Path=TypeGroup2, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="成本" Width="Auto" MinWidth="80"
+                                        Binding="{Binding Path=Cost, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="最低成本" Width="Auto" MinWidth="80"
+                                        Binding="{Binding Path=CostLowest, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <DataGridTextColumn Header="販售名稱" Width="Auto" MinWidth="80"
+                                        Binding="{Binding Path=SaleName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                    <DataGridTemplateColumn Header="大元氣販售">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding  ChannelGenki}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Checked">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.ChannelGenkiCheckCommand }"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="Unchecked">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.ChannelGenkiUnCheckCommand }"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </CheckBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="汪汪喵喵販售">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <CheckBox IsChecked="{Binding  ChannelWanmiao}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="Checked">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.ChannelWanMeowCheckCommand }"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="Unchecked">
+                                            <i:InvokeCommandAction
+                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.ChannelWanMeowUnCheckCommand }"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </CheckBox>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="3" Style="{StaticResource N_Button}" Command="{Binding SaveUpdateCommand}">儲存變更</Button>
+            </Grid>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Command="{Binding TurnPageUpCommand}">上一頁</Button>
+                <TextBlock Text="{Binding  _currentPage , UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
+                <Button Command="{Binding TurnPageDownCommand}">下一頁</Button>
+            </StackPanel>
         </StackPanel>
     </ScrollViewer>
 </Page>

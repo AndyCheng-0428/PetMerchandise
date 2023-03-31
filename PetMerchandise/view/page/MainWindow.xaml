@@ -33,6 +33,14 @@
                     <Frame Source="purchase/Purchase.xaml" />
                 </TabItem.Content>
             </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    商品建立
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Frame Source="Product.xaml" />
+                </TabItem.Content>
+            </TabItem>
         </TabControl>
         
     </Grid>

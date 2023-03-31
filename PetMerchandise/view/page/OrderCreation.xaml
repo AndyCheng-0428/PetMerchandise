@@ -55,6 +55,12 @@
                 <ComboBox Grid.Row="1" Grid.Column="1" SelectedValuePath="Tag"
                           SelectedValue="{Binding OrderViewBean.channel}"
                           SelectedItem="{Binding OrderViewBean.channel}">
+                    <b:Interaction.Triggers>
+                        <b:EventTrigger EventName="SelectionChanged">
+                            <b:InvokeCommandAction
+                                Command="{Binding SaleTypeChangedCommand}" />
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
                     <ComboBoxItem Tag="0">自取</ComboBoxItem>
                     <ComboBoxItem Tag="1">賣貨便</ComboBoxItem>
                     <ComboBoxItem Tag="2">萊賣貨</ComboBoxItem>
@@ -71,8 +77,11 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.Row="0" Grid.Column="0" MaxLength="32" Text="{Binding OrderViewBean.orderNo}"/>
-                    <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource N_Button}" Command="{Binding QueryChannelOrderCommand}">查詢</Button>
+                    <TextBox Grid.Row="0" Grid.Column="0" MaxLength="32" Text="{Binding OrderViewBean.orderNo}" />
+                    <Button Grid.Row="0" Grid.Column="1" Style="{StaticResource N_Button}"
+                            Command="{Binding QueryChannelOrderCommand}">
+                        查詢
+                    </Button>
                 </Grid>
 
 

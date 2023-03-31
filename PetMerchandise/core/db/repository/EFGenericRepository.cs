@@ -47,7 +47,7 @@ public class EFGenericRepository<TEntity> : IRepository<TEntity> where TEntity :
 
     public void Update(TEntity entity, Expression<Func<TEntity, object>>[]? updateProperties)
     {
-        _dbContext.Entry(entity).State = EntityState.Unchanged;
+        _dbContext.Entry(entity).State = EntityState.Modified;
         if (null == updateProperties)
         {
             return;

@@ -35,7 +35,7 @@ public partial class Product
 
     public decimal? CostLowest { get; set; }
 
-    public sbyte? ChannelGenki { get; set; }
+    public bool? ChannelGenki { get; set; }
 
-    public sbyte? ChannelWanmiao { get; set; }
+    public bool? ChannelWanmiao { get; set; }
 }

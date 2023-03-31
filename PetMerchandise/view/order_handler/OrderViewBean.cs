@@ -21,7 +21,7 @@ public class OrderViewBean : INotifyPropertyChanged
 
     public int deliveryFee { set; get; } = 0; //運費
 
-    public string deliveryFeeType { set; get; } = "1"; //運費類型
+    public string deliveryFeeType { set; get; } //運費類型
     
     public void Clear()
     {

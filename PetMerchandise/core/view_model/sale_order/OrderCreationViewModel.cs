@@ -29,6 +29,8 @@ public class OrderCreationViewModel : BaseImportExportViewModel
     public ICommand SaveOrderCommand { get; set; }
     public ICommand QueryChannelOrderCommand { get; set; }
 
+    public ICommand SaleTypeChangedCommand { get; set; }
+
 
     /// <summary>
     /// 初始化所需使用之元素   
@@ -48,6 +50,29 @@ public class OrderCreationViewModel : BaseImportExportViewModel
         base.InitialCommand();
         SaveOrderCommand = new RelayCommand<object>(_ => { CreateSaleOrder(); });
         QueryChannelOrderCommand = new RelayCommand<object>(_ => { QueryChannelOrder(); });
+        SaleTypeChangedCommand = new RelayCommand<object>(_ => { SaleTypeChanged(); });
+    }
+
+    private void SaleTypeChanged()
+    {
+        if (!string.Equals(OrderViewBean.channel, "0"))
+        {
+            OrderViewBean.orderNo = "";
+            OrderViewBean.NotifyPropertyChanged();
+            return;
+        }
+
+        // 自取自動帶入編號
+        DateTime dateTime = DateTime.Today;
+        SaleContext saleContext = _saleOrderRepository.DbContext as SaleContext;
+        var result = from so in saleContext.SaleOrders
+            where so.OrderY == dateTime.Year && so.OrderM == dateTime.Month && so.OrderD == dateTime.Day
+            select so;
+        int Count = result.Count();
+        int LastIndex = Count + 1;
+        OrderViewBean.orderNo = string.Format("{0:0000}{1:00}{2:00}{3:000000}", dateTime.Year, dateTime.Month,
+            dateTime.Day, LastIndex);
+        OrderViewBean.NotifyPropertyChanged();
     }
 
 
@@ -235,7 +260,6 @@ public class OrderCreationViewModel : BaseImportExportViewModel
 
         _saleOrderDetailRepository.SaveChanges();
 
-
         Dictionary<string, Inventory> inventories;
         var context = _inventoryRepository.DbContext as SaleContext;
 
@@ -302,6 +326,8 @@ public class OrderCreationViewModel : BaseImportExportViewModel
         }
 
         _saleOrderDetailRepository.SaveChanges();
+        OnShowConfirmation("成功", string.Format("渠道訂單編號:{0}建立成功!", saleOrder.ChannelOrderNo));
+        ClearData();
     }
 
     /// <summary>
@@ -315,5 +341,19 @@ public class OrderCreationViewModel : BaseImportExportViewModel
     private string GenerateUniqueKey(string uuid, int? year, int? month, int? day)
     {
         return string.Format("{0}-{1:0000}-{2:00}-{3:00}", uuid, year, month, day);
+    }
+
+    private void ClearData()
+    {
+        OrderViewBean.channel = "1";
+        OrderViewBean.purchaser = "";
+        OrderViewBean.orderEstablishDate = DateTime.Today.ToString("yyyy/MM/dd");
+        OrderViewBean.orderNo = "";
+        OrderViewBean.purchaserPhone = "";
+        OrderViewBean.deliveryFee = 0;
+        OrderViewBean.purchaserFbId = "";
+        OrderViewBean.deliveryFeeType = "0";
+        OrderViewBean.NotifyPropertyChanged();
+        base.ClearAll();
     }
 }
