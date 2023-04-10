@@ -19,9 +19,6 @@
         </i:Interaction.Triggers>
         <StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <!-- <Button Command="{Binding TransOutOrderCommand}">訂單出貨</Button> -->
-                <!-- <Button Command="{Binding CompleteOrderCommand}">買家已取貨</Button> -->
-                <!-- <Button Command="{Binding DiscardOrderCommand}">棄單</Button> -->
             </StackPanel>
             <DataGrid CanUserDeleteRows="False" CanUserAddRows="False" ItemsSource="{Binding OrderStatusBeanList}"
                       AutoGenerateColumns="False" IsReadOnly="True">

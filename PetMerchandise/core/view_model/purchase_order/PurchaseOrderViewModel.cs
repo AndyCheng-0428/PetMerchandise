@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 using PetMerchandise.core.db.entity;
 using PetMerchandise.core.view_model.misc;
-using PetMerchandise.view.order_handler;
+using PetMerchandise.view.bean.order_handler;
 
 namespace PetMerchandise.core.view_model.purchase_order;
 
@@ -36,7 +36,7 @@ public class PurchaseOrderViewModel : BaseImportExportViewModel
                 Enable = po.TransInStatus != 0,
                 ean13 = p.Ean13,
                 expDate = DateTime.Parse(string.Format("{0:0000}/{1:00}/{2:00}", po.Year, po.Month, po.Day)),
-                qty = po.Qty.Value,
+                qty = po.Qty,
                 groupType1 = p.TypeGroup1,
                 groupType2 = p.TypeGroup2,
                 brand = p.Brand,

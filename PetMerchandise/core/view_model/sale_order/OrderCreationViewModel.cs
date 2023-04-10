@@ -6,8 +6,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Input;
 using PetMerchandise.core.db.entity;
 using PetMerchandise.core.view_model.misc;
+using PetMerchandise.view.bean.order_handler;
 using PetMerchandise.view.misc;
-using PetMerchandise.view.order_handler;
+using PetMerchandise.view.page;
 
 namespace PetMerchandise.core.view_model.sale_order;
 
@@ -137,12 +138,6 @@ public class OrderCreationViewModel : BaseImportExportViewModel
             OrderDetailBeanList.Add(detailViewBean);
             detailViewBean.NotifyPropertyChanged();
         }
-    }
-
-    protected override void ClearAll()
-    {
-        OrderViewBean.Clear();
-        base.ClearAll();
     }
 
     /// <summary>

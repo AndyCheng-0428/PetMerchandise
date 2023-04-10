@@ -5,10 +5,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Windows.Input;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using PetMerchandise.core.db;
 using PetMerchandise.core.db.entity;
 using PetMerchandise.core.db.repository;
 using PetMerchandise.core.view_model.misc;
-using PetMerchandise.view.order_handler;
+using PetMerchandise.view.bean.order_handler;
+using PetMerchandise.view.bean.product_handler;
 
 namespace PetMerchandise.core.view_model;
 
@@ -21,7 +23,7 @@ public class BaseImportExportViewModel : BaseViewModel
     protected EFGenericRepository<SaleOrderDetail> _saleOrderDetailRepository { get; set; }
     protected EFGenericRepository<BlackList?> _blackListRepository { get; set; }
     protected EFGenericRepository<Inventory> _inventoryRepository { get; set; }
-    
+
     protected EFGenericRepository<PurchaseOrder> _purchaseOrderRepository { get; set; }
 
     protected EFGenericRepository<Product> ProductRepository => _productRepository;
@@ -32,7 +34,6 @@ public class BaseImportExportViewModel : BaseViewModel
     public ICommand QueryUuidCommand { get; set; }
     public ICommand ClearAllCommand { get; set; }
     public ICommand DeleteDetailCommand { get; set; }
-
     public ICommand QueryBrandNameCommand { get; set; }
     public ICommand QuerySubNameCommand { get; set; }
     public ICommand QueryPackageCommand { get; set; }
@@ -75,7 +76,7 @@ public class BaseImportExportViewModel : BaseViewModel
     /// </summary>
     private void InitialRepository()
     {
-        var context = new SaleContext();
+        var context = ContextManager.GetInstance();
         _productRepository = new EFGenericRepository<Product>(context);
         _blackListRepository = new EFGenericRepository<BlackList?>(context);
         _saleOrderRepository = new EFGenericRepository<SaleOrder>(context);

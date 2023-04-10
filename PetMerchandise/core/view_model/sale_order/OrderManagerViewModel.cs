@@ -9,7 +9,7 @@ using MySqlConnector;
 using PetMerchandise.core.db.entity;
 using PetMerchandise.core.db.repository;
 using PetMerchandise.core.view_model.misc;
-using PetMerchandise.view.order_handler;
+using PetMerchandise.view.bean.order_handler;
 
 namespace PetMerchandise.core.view_model.sale_order;
 
@@ -347,10 +347,6 @@ public class OrderManagerViewModel : BaseViewModel
                 PurchaserPhoneNo = so.PurchaserPhone,
                 OrderSaleSum = decimal.Ceiling(a.Total)
             };
-        // if (status != null)
-        // {
-        //     result.Where(bean => bean.OrderStatus == status);
-        // }
 
         int SkipCount = (_currentPage - 1) * PAGE_COUNT;
         _totalPage = (result.Count() / PAGE_COUNT) + 1;

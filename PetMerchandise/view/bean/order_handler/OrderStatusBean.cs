@@ -1,4 +1,4 @@
-namespace PetMerchandise.view.order_handler;
+namespace PetMerchandise.view.bean.order_handler;
 
 public class OrderStatusBean
 {

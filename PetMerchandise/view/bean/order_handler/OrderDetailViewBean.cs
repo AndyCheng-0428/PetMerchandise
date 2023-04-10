@@ -1,16 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace PetMerchandise.view.order_handler;
+namespace PetMerchandise.view.bean.order_handler;
 
-public class OrderDetailViewBean : INotifyPropertyChanged
+public class OrderDetailViewBean : BindingBean
 {
     public string? Uuid { set; get; } //商品的UUID -> 不可輸入
 
-    public int? Status { set; get; } = -2;//商品入庫狀態 (已入庫 0 / 未入庫 -1 / 未登記 -2) 未登記(尚未儲存進DB資料表) -> 未入庫(僅登記到登記項) -> 已入庫(登記到登記項後，同時更改庫存表增加庫存量)
+    public int? Status { set; get; } =
+        -2; //商品入庫狀態 (已入庫 0 / 未入庫 -1 / 未登記 -2) 未登記(尚未儲存進DB資料表) -> 未入庫(僅登記到登記項) -> 已入庫(登記到登記項後，同時更改庫存表增加庫存量)
 
     public string StatusText { set; get; } = "未登記"; //商品入庫狀態文字
 
@@ -43,22 +41,6 @@ public class OrderDetailViewBean : INotifyPropertyChanged
     public ObservableHashSet<string> productSubNameSource { get; set; } = new(); //此欄位會隨所挑選類別一以及品牌變更
     public ObservableHashSet<string> packageSource { get; set; } = new(); //此欄位會隨所挑選類別一以及品牌變更
     public ObservableHashSet<string> uuidSource { get; set; } = new(); //此欄位會隨所挑選類別一以及品牌變更
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
-
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        OnPropertyChanged(propertyName);
-        return true;
-    }
-
 
     public void NotifyPropertyChanged()
     {

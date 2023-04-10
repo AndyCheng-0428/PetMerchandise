@@ -41,6 +41,14 @@
                     <Frame Source="Product.xaml" />
                 </TabItem.Content>
             </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    貼文生成
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Frame Source="promotion/Promotion.xaml" />
+                </TabItem.Content>
+            </TabItem>
         </TabControl>
         
     </Grid>
