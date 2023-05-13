@@ -104,8 +104,12 @@ public class OrderCreationViewModel : BaseImportExportViewModel
             saleOrder.OrderD);
         OrderViewBean.purchaser = saleOrder.Purchaser;
         OrderViewBean.purchaserPhone = saleOrder.PurchaserPhone;
+        OrderViewBean.deliveryFee = saleOrder.DeliveryFee;
+        OrderViewBean.deliveryFeeType = string.Format("{0}",
+            saleOrder.DeliveryFeeType);
         OrderViewBean.NotifyPropertyChanged();
-
+        OrderViewBean.deliveryFeeType = string.Format("{0}",
+            saleOrder.DeliveryFeeType);
         var context = _saleOrderRepository.DbContext as SaleContext;
 
         var results = (from sod in context.SaleOrderDetails

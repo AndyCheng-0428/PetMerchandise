@@ -244,46 +244,21 @@
                                         Binding="{Binding Path=CostLowest, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
                     <DataGridTextColumn Header="販售名稱" Width="Auto" MinWidth="80"
                                         Binding="{Binding Path=SaleName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                    <DataGridTemplateColumn Header="大元氣販售">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox IsChecked="{Binding  ChannelGenki}">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="Checked">
-                                            <i:InvokeCommandAction
-                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.ChannelGenkiCheckCommand }"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
-                                        </i:EventTrigger>
-                                        <i:EventTrigger EventName="Unchecked">
-                                            <i:InvokeCommandAction
-                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.ChannelGenkiUnCheckCommand }"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </CheckBox>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="汪汪喵喵販售">
-                        <DataGridTemplateColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox IsChecked="{Binding  ChannelWanmiao}">
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="Checked">
-                                            <i:InvokeCommandAction
-                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.ChannelWanMeowCheckCommand }"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
-                                        </i:EventTrigger>
-                                        <i:EventTrigger EventName="Unchecked">
-                                            <i:InvokeCommandAction
-                                                Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=DataContext.ChannelWanMeowUnCheckCommand }"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=DataGrid}, Path=SelectedItem}" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </CheckBox>
-                            </DataTemplate>
-                        </DataGridTemplateColumn.CellTemplate>
-                    </DataGridTemplateColumn>
+                    <DataGridCheckBoxColumn Header="大元氣販售" Binding="{Binding ChannelGenki}">
+                        <!-- <DataGridTemplateColumn.CellTemplate> -->
+                        <!--     <DataTemplate> -->
+                        <!--         <CheckBox IsChecked="{Binding  ChannelGenki}"> -->
+                        <!--         </CheckBox> -->
+                        <!--     </DataTemplate> -->
+                        <!-- </DataGridTemplateColumn.CellTemplate> -->
+                    </DataGridCheckBoxColumn>
+                    <DataGridCheckBoxColumn Header="汪汪喵喵販售" Binding="{Binding ChannelWanmiao}">
+                        <!-- <DataGridTemplateColumn.CellTemplate> -->
+                        <!--     <DataTemplate> -->
+                        <!--         <CheckBox IsChecked="{Binding ChannelWanmiao}"/> -->
+                        <!--     </DataTemplate> -->
+                        <!-- </DataGridTemplateColumn.CellTemplate> -->
+                    </DataGridCheckBoxColumn>
                 </DataGrid.Columns>
             </DataGrid>
             <Grid>

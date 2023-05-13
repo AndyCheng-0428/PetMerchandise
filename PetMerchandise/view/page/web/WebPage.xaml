@@ -1,0 +1,16 @@
+<Page x:Class="PetMerchandise.view.page.web.WebPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:local="clr-namespace:PetMerchandise.view.page.web"
+      xmlns:web="clr-namespace:PetMerchandise.core.view_model.web"
+      mc:Ignorable="d"
+      Title="WebPage" Height="450" Width="800">
+    <Grid>
+        <Grid.DataContext>
+            <web:WebViewModel/>
+        </Grid.DataContext>
+        <WebBrowser/>
+    </Grid>
+</Page>

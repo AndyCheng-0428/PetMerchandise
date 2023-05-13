@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Input;
@@ -40,60 +41,12 @@ public class PromoViewModel : BaseViewModel
     private void GeneratePromotionText()
     {
         StringBuilder sb = new();
+        StringBuilder consoleSb = new();
         DateTime today = DateTime.Today;
         sb.Append(string.Format("⏰{0:0000}/{1:00}/{2:00}修正商品品項及庫存⏰\n\n", today.Year, today.Month, today.Day));
         sb.Append("🔄本貼文 不定期更新 🔄\n\n");
-
-        var inventory = from inv in ContextManager.GetInstance().Inventories
-            where inv.Qty != 0
-            orderby inv.ExpY, inv.ExpM, inv.ExpD
-            group inv by new { inv.Uuid, inv.ExpY, inv.ExpM, inv.ExpD }
-            into gInv
-            select new
-            {
-                UUID = gInv.Key.Uuid,
-                EXP_Y = gInv.First().ExpY,
-                EXP_M = gInv.First().ExpM,
-                EXP_D = gInv.First().ExpD,
-                SALE_SUM = gInv.Sum(_ => _.Qty)
-            };
-
-        List<PromoTempEntity> resultCollection = null;
-        if (PromotionBean.isBySaleName)
-        {
-            resultCollection = GeneratePromotionText(0);
-        }
-        else
-        {
-            IQueryable<PromoTempEntity> queryable = from p in ContextManager.GetInstance().Products
-                join inv in inventory
-                    on p.Uuid equals inv.UUID
-                where (string.IsNullOrWhiteSpace(PromotionBean.brand) || p.Brand == PromotionBean.brand) &&
-                      (string.IsNullOrWhiteSpace(PromotionBean.groupType1) ||
-                       p.TypeGroup1 == PromotionBean.groupType1) &&
-                      (string.IsNullOrWhiteSpace(PromotionBean.groupType2) ||
-                       p.TypeGroup2 == PromotionBean.groupType2) &&
-                      ((PromotionBean.isGenki && p.ChannelGenki == true) ||
-                       (PromotionBean.isWanMeow && p.ChannelWanmiao == true))
-                group new { p, inv } by new { p.Uuid, p.Brand, p.Animal }
-                into gPInv
-                select new PromoTempEntity()
-                {
-                    SaleName = String.Concat(gPInv.Single().p.Name,
-                        string.IsNullOrEmpty(gPInv.Single().p.SubName) ? "" : gPInv.Single().p.SubName),
-                    SaleSum = gPInv.Sum(c => c.inv.SALE_SUM),
-                    SalePrice = gPInv.Single().p.SalePrice,
-                    expY = gPInv.Single().inv.EXP_Y,
-                    expM = gPInv.Single().inv.EXP_M,
-                    expD = gPInv.Single().inv.EXP_D,
-                    typeGroup1 = gPInv.Single().p.TypeGroup1,
-                    uuid = gPInv.Single().p.Uuid,
-                    Brand = gPInv.Single().p.Brand,
-                    Animal = gPInv.Single().p.Animal,
-                };
-
-            resultCollection = queryable.OrderBy(p => p.SaleName).ThenBy(k => k.Brand).ThenBy(j => j.Animal).ToList();
-        }
+        List<PromoTempEntity> resultCollection = GeneratePromotionText(PromotionBean.isBySaleName);
+      
 
         int count = 1;
         foreach (var promotion in resultCollection)
@@ -103,20 +56,25 @@ public class PromoViewModel : BaseViewModel
                 count++, promotion.SaleName, promotion.SaleSum,
                 promotion.SalePrice.Value.ToString().TrimEnd('0').TrimEnd('.'), promotion.expY, promotion.expM,
                 promotion.expD));
+            if (!File.Exists(string.Format("{0}\\{1}.jpg", PromotionBean.imageSourcePath, promotion.uuid)))
+            {
+                consoleSb.Append(string.Format("{0} {1} {2} 沒有圖片\r\n", promotion.SaleName, promotion.Brand,
+                    promotion.uuid));
+            }
         }
-
         sb.Append("賣貨便\uD83D\uDE9A 運費35元自出\n\n");
-        sb.Append("萊賣貨\uD83D\uDE9A 運費29元自出\n\n");
+        sb.Append("萊賣貨\uD83D\uDE9A 運費23元自出\n\n");
         sb.Append("高雄小港可自取\uD83D\uDEF5\n\n");
         sb.Append("所有商品均為現貨 - 賣貨便下單後24小時內\uD83D\uDD50即會出貨\n\n");
         sb.Append("有任何問題請私訊詢問 會於19:00~22:00回覆\n\n");
         sb.Append("商品價格以文字敘述為主\n\n");
         sb.Append("於寄件達三日未取貨 會發送FB訊息提醒！　屆時再煩請注意一下訊息唷！");
         PromotionBean.PromotionText = sb.ToString();
+        PromotionBean.ConsoleText = consoleSb.ToString();
         PromotionBean.NotifyPropertyChanged();
     }
 
-    public List<PromoTempEntity> GeneratePromotionText(int i)
+    public List<PromoTempEntity> GeneratePromotionText(bool bySaleName)
     {
         List<PromoTempEntity> promoTempEntities = new();
         using (MySqlConnection lconn =
@@ -127,11 +85,14 @@ public class PromoViewModel : BaseViewModel
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = lconn;
-                cmd.CommandText = "CALL_PROMOTION_BY_SALE_NAME";
+                cmd.CommandText = bySaleName? "CALL_PROMOTION_BY_SALE_NAME": "CALL_PROMOTION_BY_UUID";
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@TYPE_GROUP_1", PromotionBean.groupType1);
-                cmd.Parameters.AddWithValue("@TYPE_GROUP_2", PromotionBean.groupType2);
-                cmd.Parameters.AddWithValue("@BRAND", PromotionBean.brand);
+                cmd.Parameters.AddWithValue("@IS_GENKI", PromotionBean.isGenki? 1: 0);
+                cmd.Parameters.AddWithValue("@IS_WANMIAO", PromotionBean.isWanMeow? 1: 0);
+                cmd.Parameters.AddWithValue("@IS_ALL", PromotionBean.isAll? 1 : 0);
+                cmd.Parameters.AddWithValue("@TYPE_GROUP_1", string.IsNullOrWhiteSpace(PromotionBean.groupType1)? null : PromotionBean.groupType1);
+                cmd.Parameters.AddWithValue("@TYPE_GROUP_2", string.IsNullOrWhiteSpace(PromotionBean.groupType2)? null : PromotionBean.groupType2);
+                cmd.Parameters.AddWithValue("@BRAND", string.IsNullOrWhiteSpace(PromotionBean.brand)? null : PromotionBean.brand);
 
                 cmd.Parameters.AddWithValue("@SALE_NAME", MySqlDbType.VarChar);
                 cmd.Parameters["@SALE_NAME"].Direction = ParameterDirection.Output;

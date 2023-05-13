@@ -49,6 +49,22 @@
                     <Frame Source="promotion/Promotion.xaml" />
                 </TabItem.Content>
             </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    測試區域
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Frame Source="setting/PromotionSetting.xaml" />
+                </TabItem.Content>
+            </TabItem>
+            <TabItem>
+                <TabItem.Header>
+                    網站區域
+                </TabItem.Header>
+                <TabItem.Content>
+                    <Frame Source="web/WebPage.xaml" />
+                </TabItem.Content>
+            </TabItem>
         </TabControl>
         
     </Grid>

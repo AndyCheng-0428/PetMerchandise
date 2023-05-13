@@ -32,9 +32,9 @@ public class ProductBean : BindingBean
 
     public decimal? CostLowest { get; set; }
 
-    public bool? ChannelGenki { get; set; }
+    public bool ChannelGenki { get; set; }
 
-    public bool? ChannelWanmiao { get; set; }
+    public bool ChannelWanmiao { get; set; }
 
     public void NotifyPropertyChanged()
     {

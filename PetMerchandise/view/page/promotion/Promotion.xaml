@@ -24,6 +24,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -41,6 +42,7 @@
                     </Grid.Resources>
                     <CheckBox Grid.Row="0" Grid.Column="0" IsChecked="{Binding PromotionBean.isGenki}">大元氣</CheckBox>
                     <CheckBox Grid.Row="0" Grid.Column="1" IsChecked="{Binding PromotionBean.isWanMeow}">汪喵</CheckBox>
+                    <CheckBox Grid.Row="0" Grid.Column="2" IsChecked="{Binding PromotionBean.isAll}">不拘</CheckBox>
                     <CheckBox Grid.Row="1" Grid.Column="0" IsChecked="{Binding PromotionBean.isBySaleName}">是否使用販售名稱</CheckBox>
                     <CheckBox Grid.Row="1" Grid.Column="1" IsChecked="{Binding PromotionBean.isByUuid}">是否使用單一商品個別化名稱</CheckBox>
                     <StackPanel Grid.Row="2" Grid.Column="0">
