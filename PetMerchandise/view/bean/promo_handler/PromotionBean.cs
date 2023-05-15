@@ -8,7 +8,7 @@ public class PromotionBean : BindingBean
     public string ConsoleText { get; set; }
 
     public string imageSourcePath { get; set; } = "D:\\商品\\source";
-    public string imageOutputPath { get; set; }
+    public string imageOutputPath { get; set; } = "D:\\商品\\output";
     public string groupType1 { get; set; }
     public string groupType2 { get; set; }
 

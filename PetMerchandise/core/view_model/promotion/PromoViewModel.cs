@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -46,9 +47,48 @@ public class PromoViewModel : BaseViewModel
         sb.Append(string.Format("⏰{0:0000}/{1:00}/{2:00}修正商品品項及庫存⏰\n\n", today.Year, today.Month, today.Day));
         sb.Append("🔄本貼文 不定期更新 🔄\n\n");
         List<PromoTempEntity> resultCollection = GeneratePromotionText(PromotionBean.isBySaleName);
-      
+
 
         int count = 1;
+        Dictionary<string, string> sourceDict = new();
+        Dictionary<string, bool> targetDict = new(); //將所有已輸出檔案路徑盡數加入，若有重複則不輸出，若最終結果為false則刪除
+
+        foreach (string typeGroup1 in Directory.GetDirectories(PromotionBean.imageOutputPath))
+        {
+            foreach (var filePath in Directory.GetFiles(typeGroup1))
+            {
+                // 如果使用者選擇的類別不為空，且檔案路徑不包含使用者選擇的類別，則跳過　（避免誤刪其他圖片）
+                if (!string.IsNullOrWhiteSpace(PromotionBean.groupType1) &&
+                    !filePath.Contains(PromotionBean.groupType1))
+                {
+                    continue;
+                }
+
+                targetDict.Add(filePath, false);
+            }
+        }
+
+        if (!Directory.Exists(PromotionBean.imageSourcePath))
+        {
+            consoleSb.Append("商品來源資料夾不存在");
+        }
+        else
+        {
+            string[] filesPath = Directory.GetFiles(PromotionBean.imageSourcePath);
+            foreach (string file in filesPath)
+            {
+                int dotIndex = file.IndexOf('.');
+                int lastSlashIndex = file.LastIndexOf('\\') + 1;
+                string referUuid = file.Substring(lastSlashIndex, dotIndex - lastSlashIndex);
+                if (sourceDict.ContainsKey(referUuid))
+                {
+                    continue; //避免相同檔案名稱 不同副檔名造成錯誤
+                }
+
+                sourceDict.Add(referUuid, file);
+            }
+        }
+
         foreach (var promotion in resultCollection)
         {
             sb.Append(string.Format(
@@ -56,12 +96,10 @@ public class PromoViewModel : BaseViewModel
                 count++, promotion.SaleName, promotion.SaleSum,
                 promotion.SalePrice.Value.ToString().TrimEnd('0').TrimEnd('.'), promotion.expY, promotion.expM,
                 promotion.expD));
-            if (!File.Exists(string.Format("{0}\\{1}.jpg", PromotionBean.imageSourcePath, promotion.uuid)))
-            {
-                consoleSb.Append(string.Format("{0} {1} {2} 沒有圖片\r\n", promotion.SaleName, promotion.Brand,
-                    promotion.uuid));
-            }
+            consoleSb.Append(CompressImage(promotion.uuid, promotion.SaleName, promotion.Brand, promotion.typeGroup1,
+                sourceDict, targetDict));
         }
+
         sb.Append("賣貨便\uD83D\uDE9A 運費35元自出\n\n");
         sb.Append("萊賣貨\uD83D\uDE9A 運費23元自出\n\n");
         sb.Append("高雄小港可自取\uD83D\uDEF5\n\n");
@@ -71,6 +109,15 @@ public class PromoViewModel : BaseViewModel
         sb.Append("於寄件達三日未取貨 會發送FB訊息提醒！　屆時再煩請注意一下訊息唷！");
         PromotionBean.PromotionText = sb.ToString();
         PromotionBean.ConsoleText = consoleSb.ToString();
+        // 若無須存在之檔案則刪除
+        foreach (var filePath in targetDict.Keys)
+        {
+            if (!targetDict[filePath])
+            {
+                File.Delete(filePath);
+            }
+        }
+
         PromotionBean.NotifyPropertyChanged();
     }
 
@@ -85,14 +132,17 @@ public class PromoViewModel : BaseViewModel
             using (MySqlCommand cmd = new MySqlCommand())
             {
                 cmd.Connection = lconn;
-                cmd.CommandText = bySaleName? "CALL_PROMOTION_BY_SALE_NAME": "CALL_PROMOTION_BY_UUID";
+                cmd.CommandText = bySaleName ? "CALL_PROMOTION_BY_SALE_NAME" : "CALL_PROMOTION_BY_UUID";
                 cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@IS_GENKI", PromotionBean.isGenki? 1: 0);
-                cmd.Parameters.AddWithValue("@IS_WANMIAO", PromotionBean.isWanMeow? 1: 0);
-                cmd.Parameters.AddWithValue("@IS_ALL", PromotionBean.isAll? 1 : 0);
-                cmd.Parameters.AddWithValue("@TYPE_GROUP_1", string.IsNullOrWhiteSpace(PromotionBean.groupType1)? null : PromotionBean.groupType1);
-                cmd.Parameters.AddWithValue("@TYPE_GROUP_2", string.IsNullOrWhiteSpace(PromotionBean.groupType2)? null : PromotionBean.groupType2);
-                cmd.Parameters.AddWithValue("@BRAND", string.IsNullOrWhiteSpace(PromotionBean.brand)? null : PromotionBean.brand);
+                cmd.Parameters.AddWithValue("@IS_GENKI", PromotionBean.isGenki ? 1 : 0);
+                cmd.Parameters.AddWithValue("@IS_WANMIAO", PromotionBean.isWanMeow ? 1 : 0);
+                cmd.Parameters.AddWithValue("@IS_ALL", PromotionBean.isAll ? 1 : 0);
+                cmd.Parameters.AddWithValue("@TYPE_GROUP_1",
+                    string.IsNullOrWhiteSpace(PromotionBean.groupType1) ? null : PromotionBean.groupType1);
+                cmd.Parameters.AddWithValue("@TYPE_GROUP_2",
+                    string.IsNullOrWhiteSpace(PromotionBean.groupType2) ? null : PromotionBean.groupType2);
+                cmd.Parameters.AddWithValue("@BRAND",
+                    string.IsNullOrWhiteSpace(PromotionBean.brand) ? null : PromotionBean.brand);
 
                 cmd.Parameters.AddWithValue("@SALE_NAME", MySqlDbType.VarChar);
                 cmd.Parameters["@SALE_NAME"].Direction = ParameterDirection.Output;
@@ -179,5 +229,50 @@ public class PromoViewModel : BaseViewModel
     private void InitialRepository()
     {
         _productRepository = new EFGenericRepository<Product>(ContextManager.GetInstance());
+    }
+
+    // Compress Image from imageSourcePath to imageTargetPath 
+    // Max width is 600 and Max height is 800
+    // If image is smaller than 600*800, it will not compress
+    // If image width or height is larger than max width or height, it will compress keep ratio
+    private string CompressImage(String fileName, string saleName, string brand, string groupType1,
+        Dictionary<string, string> sourceDict, Dictionary<string, bool> targetDict)
+    {
+        if (!Directory.Exists(PromotionBean.imageSourcePath))
+        {
+            return "";
+        }
+
+        if (!sourceDict.ContainsKey(fileName))
+        {
+            return string.Format("{0} {1} {2} 沒有圖片\r\n", saleName, brand, fileName);
+        }
+
+        String sourcePath = sourceDict[fileName];
+
+        if (!Directory.Exists(string.Format("{0}\\{1}", PromotionBean.imageOutputPath, groupType1)))
+        {
+            Directory.CreateDirectory(string.Format("{0}\\{1}", PromotionBean.imageOutputPath, groupType1));
+        }
+
+        string outputFilePath = string.Format("{0}\\{1}\\{2}.jpg", PromotionBean.imageOutputPath, groupType1, fileName);
+        if (File.Exists(outputFilePath))
+        {
+            targetDict[outputFilePath] = true;
+            return "";
+        }
+
+        var maxWidth = 600;
+        var maxHeight = 800;
+        var image = Image.FromFile(sourcePath);
+        var ratioX = (double)maxWidth / image.Width;
+        var ratioY = (double)maxHeight / image.Height;
+        var ratio = Math.Min(ratioX, ratioY);
+        var newWidth = (int)(image.Width * ratio);
+        var newHeight = (int)(image.Height * ratio);
+        var newImage = new Bitmap(newWidth, newHeight);
+        Graphics.FromImage(newImage).DrawImage(image, 0, 0, newWidth, newHeight);
+        newImage.Save(outputFilePath);
+        return "";
     }
 }
